@@ -1,46 +1,95 @@
 const display = document.getElementById('display');
-let currentInput = '';
-let secondInput = '';
-let operation = '';
-let result = '';
-let operator = '';
+let currentInput = '0';  
+let previousInput = 0;   
+let operator = '';       
 
 
-function clearDisplay(key){
-    display.value = "";
-};
-
-function getNumber(num){
-    display.value += num;
-};
-
-function getOperator(op){
-    console.log(op);
-};
-
-function setDecimal(dec){
-    console.log(dec);
-};
-
-function getSign() {
-    let currentInput = Number(display.value);
-    if (currentInput > 0) {
-        currentInput = -Math.abs(currentInput); // Turn it negative
-    } else {
-        currentInput = Math.abs(currentInput); // Turn it positive
+function getNumber(num) {
+    currentInput = display.value;
+    if (operator != ''){
+        previousInput = Number(currentInput);   
+        display.value = '';
     }
-    display.value = currentInput; // Update the display with the new value
+    if (display.value === '0' && !display.value.includes('.')) {
+        display.value = num;  
+    } else {   
+        display.value += num; 
+    } 
+    currentInput = display.value;
+
+
 }
 
 
-function deleteLast(del){
+function setDecimal() {
+    if (!display.value.includes('.')) {
+        display.value += '.'; 
+    }
     currentInput = display.value;
-    let displayArray = currentInput.split('');
-    displayArray.pop();
-    currentInput = displayArray.join('');
-    display.value = currentInput;
-};
+}
 
-function calculate(operation){
-    console.log(operation);
-};
+
+function changeSign() {
+    currentInput = Number(display.value);
+    currentInput = -currentInput;
+    display.value = currentInput;
+}
+
+
+function defineOperator(op) {
+    operator = op;
+    previousInput = Number(currentInput);  
+    display.value = currentInput;
+    currentInput = '0';
+  
+
+    console.log(operator);
+    console.log(previousInput);
+    console.log(currentInput);
+}
+
+
+function clearDisplay() {
+    display.value = '0';
+    currentInput = '0';
+    previousInput = 0;
+    operator = '';
+}
+
+
+function deleteLast() {
+    currentInput = display.value;
+    currentInput = currentInput.slice(0, -1) || '0';  
+    display.value = currentInput;
+}
+
+
+function calculate() {
+    let result = 0;
+    currentInput = Number(currentInput);  
+    
+    switch (operator) {
+        case '+':
+            result = previousInput + currentInput;
+            break;
+        case '-':
+            result = previousInput - currentInput;
+            break;
+        case '*':
+            result = previousInput * currentInput;
+            break;
+        case '/':
+            result = previousInput / currentInput;
+            break;
+        case '%':
+            result = previousInput % currentInput;
+            break;
+        default:
+            return;
+    }
+
+    display.value = result;   
+    currentInput = result;    
+    previousInput = 0;        
+    operator = '';            
+}
